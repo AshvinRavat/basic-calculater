@@ -25,11 +25,11 @@
             </template>
 
             <input type="button" id="clear" value="Clear All" @click="answer = ''">
-            <input type="button" value="." @click="answer += '.',">
-            <input type="button" value="+" @click="answer += '+' ">
-            <input type="button" value="-" @click="answer += '-' ">
-            <input type="button" value="*" @click="answer += '*' ">
-            <input type="button" value="/" @click="answer += '/' ">
+            <input type="button" value="." @click="answer += '.'">
+            <input type="button" value="+" @click="answer += '+'">
+            <input type="button" value="-" @click="answer += '-'">
+            <input type="button" value="*" @click="answer += '*'">
+            <input type="button" value="/" @click="answer += '/'">
             <input type="button" value="=" @click="answer = '' + eval(answer), evaluationDone = true">
         </form>
     </div>
