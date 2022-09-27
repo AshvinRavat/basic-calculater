@@ -10,25 +10,28 @@
         x-data="
         {
             number:
-                [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+                [ 0, 1, 2, 3 , 4, 5, 6, 7, 8, 9
             ],
-            answer :''
+            answer :'',
+            digits : [],
+            operators : [],
         }">
         <form name="form">
-            <input  id = "calc" type="text" name="answer" :value="answer"><br>
+            <input id="calc" type="text" name="answer" :value="answer" class="text-end"><br>
+
             <template x-for="numbers in number">
                 <input type="button" :value="numbers"
-                 x-text="numbers"
-                 @click="answer += numbers"
+                    x-text="numbers"
+                 @click="digits.push(numbers),"
                 >
             </template>
-            arithmetic
+
             <input type = "button" id="clear" value = "Clear All" @click = "answer = '' " >
-            <input type="button" value="." @click="answer += '.' ">
-            <input type="button" value="+" @click="answer += '+' ">
-            <input type="button" value="-" @click="answer += '-' ">
-            <input type="button" value="*" @click="answer += '*' ">
-            <input type="button" value="/" @click="answer += '/' ">
+            <input type="button" value="." @click="operators.push(".")">
+            <input type="button" value="+" @click="operators.push("+")">
+            <input type="button" value="-" @click="operators.push("-")">
+            <input type="button" value="*" @click="operators.push("*")">
+            <input type="button" value="/" @click="operators.push("/")">
             <input type="button" value="=" @click="answer = eval(answer)">
         </form>
     </div>
