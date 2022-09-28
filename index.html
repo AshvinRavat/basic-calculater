@@ -14,43 +14,41 @@
             evaluationDone: false,
             answer: '',
             history: [],
-            historyDisable: false
-        }">
+        }"
+    >
 
-        <div x-show="historyDisable">
-            <template x-for="showHistory in history ">
-                <p  name="answer" x-text="showHistory">
-                    <br>
-            </template>
-        </div>
-        <form name="form">
-            <input id="calc" type="text" name="answer" :value="answer"><br>
-            <template x-for="number in numbers">
-                <input type="button" :value="number" x-text="number"
-                    @click="
-                    if(evaluationDone && answer != '') {
-                        answer = '';
-                    }
-                    answer += number;
-                    evaluationDone = false"
-                >
-            </template>
+    <template x-for="showHistory in history">
+        <p x-text="showHistory"><br>
+    </template>
 
-            <input type="button" id="clear" value="Clear All" @click="
-                if(answer != '') {
-                    historyDisable = false;
-                    history = [];
-                } answer = ''; "
+    <form name="form">
+        <input id="calc" type="text" name="answer" :value="answer"><br>
+        <template x-for="number in numbers">
+            <input type="button" :value="number" x-text="number"
+                @click="
+                if(evaluationDone && answer != '') {
+                    answer = '';
+                }
+                answer += number;
+                evaluationDone = false"
             >
-            <input type="button" value="." @click="answer +='.'; evaluationDone=false">
-            <input type="button" value="+" @click="answer += '+'; evaluationDone=false">
-            <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
-            <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
-            <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
-            <input type="button" value="="
-                @click="history.push(answer + '=' + eval(answer) + '');
-                answer = '' + eval(answer); evaluationDone = true; historyDisable=true; ">
-        </form>
+        </template>
+
+        <input type="button" id="clear" value="Clear All" @click="
+            if(answer != '') {
+                history = [];
+            }
+            answer = ''; "
+        >
+        <input type="button" value="." @click="answer +='.'; evaluationDone=false">
+        <input type="button" value="+" @click="answer += '+'; evaluationDone=false">
+        <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
+        <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
+        <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
+        <input type="button" value="=" @click="history.push(answer + '=' + eval(answer) + '');
+            answer = '' + eval(answer); evaluationDone = true;"
+        >
+    </form>
     </div>
 </body>
 </html>
