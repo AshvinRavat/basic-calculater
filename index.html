@@ -14,6 +14,7 @@
             evaluationDone: false,
             answer: '',
             history: [],
+            manual : ''
         }"
     >
 
@@ -40,13 +41,24 @@
             }
             answer = ''; "
         >
-        <input type="button" value="." @click="answer +='.'; evaluationDone=false">
+        <input type="button" value="." @click="answer +='.';  evaluationDone=false">
         <input type="button" value="+" @click="answer += '+'; evaluationDone=false">
         <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
         <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
         <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
-        <input type="button" value="=" @click="history.push(answer + '=' + eval(answer) + '');
-            answer = '' + eval(answer); evaluationDone = true;"
+        <input type="button" value="=" @click="manual = form.answer.value;
+            if(manual !== '') {
+                answer = '' + eval(manual);
+                history.push(manual + '' + eval(answer));
+                evaluationDone = true;"
+
+            }
+            else {
+                 history.push(answer + '=' + eval(answer));
+                 answer = '' + eval(answer);
+                 evaluationDone = true;"
+            }
+
         >
     </form>
     </div>
