@@ -4,7 +4,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <h1> Calculator</h1>
     <div class="formstyle" x-data="
@@ -13,26 +12,37 @@
                 [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
             ],
             evaluationDone: false,
-            answer: ''
+            answer: '',
+            operators: [],
+            clickable: true
         }">
         <form name="form">
             <input id="calc" type="text" name="answer" :value="answer"><br>
-
             <template x-for="number in numbers">
                 <input type="button" :value="number" x-text="number"
-                    @click="if(evaluationDone && answer !== '')answer = '';
-                answer += number, evaluationDone = false">
+                    @click="
+                    if(evaluationDone && operators.length == 0 && answer != '') {
+                        answer = '';
+                        clickable = false;
+                    }
+                    if(clickable && operators.length == 0){
+                        answer = answer;
+                    }
+                    answer += number;
+                    evaluationDone = false"
+                >
             </template>
 
             <input type="button" id="clear" value="Clear All" @click="answer = ''">
-            <input type="button" value="." @click="answer += '.'">
-            <input type="button" value="+" @click="answer += '+'">
-            <input type="button" value="-" @click="answer += '-'">
-            <input type="button" value="*" @click="answer += '*'">
-            <input type="button" value="/" @click="answer += '/'">
-            <input type="button" value="=" @click="answer = '' + eval(answer), evaluationDone = true">
+            <input type="button" value="." @click="operators.push('.'); answer +='.'">
+            <input type="button" value="+" @click="operators.push('+'); answer += '+'">
+            <input type="button" value="-" @click="operators.push('-'); answer += '-'">
+            <input type="button" value="*" @click="operators.push('*'); answer += '*'">
+            <input type="button" value="/" @click="operators.push('/'); answer += '/'">
+            <input type="button" value="=" @click="answer = '' + eval(answer), evaluationDone = true;
+                operators.length = 0;"
+             >
         </form>
     </div>
-
 </body>
 </html>
