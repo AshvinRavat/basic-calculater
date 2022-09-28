@@ -39,7 +39,7 @@
             <input type="button" id="clear" value="Clear All" @click="
                 if(answer != '') {
                     historyDisable = false;
-                    history.pop();
+                    history = [];
                 } answer = ''; "
             >
             <input type="button" value="." @click="answer +='.'; evaluationDone=false">
