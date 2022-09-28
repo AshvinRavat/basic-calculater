@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1> Calculator</h1>
+    <h1>Calculator</h1>
     <div class="formstyle" x-data="
         {
             numbers:
@@ -13,7 +13,16 @@
             ],
             evaluationDone: false,
             answer: '',
+            history: [],
+            historyDisable: false
         }">
+
+        <div x-show="historyDisable">
+            <template x-for="showHistory in history ">
+                <p  name="answer" x-text="showHistory">
+                    <br>
+            </template>
+        </div>
         <form name="form">
             <input id="calc" type="text" name="answer" :value="answer"><br>
             <template x-for="number in numbers">
@@ -27,13 +36,20 @@
                 >
             </template>
 
-            <input type="button" id="clear" value="Clear All" @click="answer = ''">
+            <input type="button" id="clear" value="Clear All" @click="
+                if(answer != '') {
+                    historyDisable = false;
+                    history.pop();
+                } answer = ''; "
+            >
             <input type="button" value="." @click="answer +='.'; evaluationDone=false">
             <input type="button" value="+" @click="answer += '+'; evaluationDone=false">
             <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
             <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
             <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
-            <input type="button" value="=" @click="answer = '' + eval(answer), evaluationDone = true;">
+            <input type="button" value="="
+                @click="history.push(answer + '=' + eval(answer) + '');
+                answer = '' + eval(answer); evaluationDone = true; historyDisable=true; ">
         </form>
     </div>
 </body>
