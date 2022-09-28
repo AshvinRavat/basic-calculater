@@ -13,20 +13,14 @@
             ],
             evaluationDone: false,
             answer: '',
-            operators: [],
-            clickable: true
         }">
         <form name="form">
             <input id="calc" type="text" name="answer" :value="answer"><br>
             <template x-for="number in numbers">
                 <input type="button" :value="number" x-text="number"
                     @click="
-                    if(evaluationDone && operators.length == 0 && answer != '') {
+                    if(evaluationDone && answer != '') {
                         answer = '';
-                        clickable = false;
-                    }
-                    if(clickable && operators.length == 0){
-                        answer = answer;
                     }
                     answer += number;
                     evaluationDone = false"
@@ -34,14 +28,12 @@
             </template>
 
             <input type="button" id="clear" value="Clear All" @click="answer = ''">
-            <input type="button" value="." @click="operators.push('.'); answer +='.'">
-            <input type="button" value="+" @click="operators.push('+'); answer += '+'">
-            <input type="button" value="-" @click="operators.push('-'); answer += '-'">
-            <input type="button" value="*" @click="operators.push('*'); answer += '*'">
-            <input type="button" value="/" @click="operators.push('/'); answer += '/'">
-            <input type="button" value="=" @click="answer = '' + eval(answer), evaluationDone = true;
-                operators.length = 0;"
-             >
+            <input type="button" value="." @click="answer +='.'; evaluationDone=false">
+            <input type="button" value="+" @click="answer += '+'; evaluationDone=false">
+            <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
+            <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
+            <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
+            <input type="button" value="=" @click="answer = '' + eval(answer), evaluationDone = true;">
         </form>
     </div>
 </body>
