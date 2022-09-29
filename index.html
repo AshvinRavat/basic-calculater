@@ -14,7 +14,6 @@
             evaluationDone: false,
             answer: '',
             history: [],
-            manual : ''
         }"
     >
 
@@ -22,8 +21,14 @@
         <p x-text="showHistory"><br>
     </template>
 
-    <form name="form">
-        <input id="calc" type="text" name="answer" :value="answer"><br>
+    <form name="form" @submit.prevent>
+        <input id="calc" type="text" name="answer" :value="answer"
+            @keyup.enter="inputValue = document.getElementById('calc').value;
+                answer= inputValue;
+                answer = eval(answer);
+                history.push(inputValue + '=' + eval(answer))
+            "
+          ><br>
         <template x-for="number in numbers">
             <input type="button" :value="number" x-text="number"
                 @click="
@@ -46,19 +51,10 @@
         <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
         <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
         <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
-        <input type="button" value="=" @click="manual = form.answer.value;
-            if(manual !== '') {
-                answer = '' + eval(manual);
-                history.push(manual + '' + eval(answer));
-                evaluationDone = true;"
-
-            }
-            else {
-                 history.push(answer + '=' + eval(answer));
-                 answer = '' + eval(answer);
-                 evaluationDone = true;"
-            }
-
+        <input type="button" value="=" @click="answer = document.getElementById('calc').value;
+            history.push(answer + '=' + eval(answer));
+            answer = '' + eval(answer);
+            evaluationDone = true;"
         >
     </form>
     </div>
