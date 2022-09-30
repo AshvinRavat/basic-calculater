@@ -26,10 +26,10 @@
     <form name="form" @submit.prevent="">
         <input id="calc" type="text" name="answer" x-model="answer"
             @keyup="
-            if(evaluationDone && answer != '') {
+                if(evaluationDone && answer != '') {
                     newValue = answer.charAt(answer.length-1);
-
-                    for (i=0; i< operators.length; i++) {
+                    for (i=0; i< operators.length; i++)
+                    {
                         if (operators[i] == newValue) {
                             evaluationDone = false;
                         }
@@ -39,14 +39,22 @@
                         evaluationDone = false;
                         answer += newValue;
                     }
-               }
+                }
             "
             @keyup.enter="
+             if(answer.charAt(0) == '&radic;') {
+                squareRoot = answer.substring(1);
+                squareRoot = Math.sqrt(squareRoot);
+                history.push(answer + '=' + squareRoot);
+                answer = squareRoot;
+             }
+             else {
                 inputValue = document.getElementById('calc').value;
                 answer = inputValue;
                 answer = eval(answer);
                 history.push(inputValue + '=' + eval(answer));
                 evaluationDone = true;
+             }
             "
           ><br>
         <template x-for="number in numbers">
@@ -71,10 +79,21 @@
         <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
         <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
         <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
+        <input type="button" value="&radic;" @click="answer += '&radic;'; evaluationDone=false">
 
-        <input type="button" value="=" @click="answer = document.getElementById('calc').value;
-            history.push(answer + '=' + eval(answer));
-            answer = '' + eval(answer);
+
+        <input type="button" value="=" @click="
+            if(answer.charAt(0) == '&radic;') {
+                squareRoot = answer.substring(1);
+                squareRoot = Math.sqrt(squareRoot);
+                console.log(history.push(answer + '=' + squareRoot));
+                answer = squareRoot;
+            }
+            else {
+                answer = document.getElementById('calc').value;
+                history.push(answer + '=' + eval(answer));
+                answer = '' + eval(answer);
+            }
             evaluationDone = true;
             "
         >
