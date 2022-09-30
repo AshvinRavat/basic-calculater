@@ -14,7 +14,8 @@
             evaluationDone: false,
             answer: '',
             history: [],
-            newValue: ''
+            newValue: '',
+            operators: ['+','-','*','/']
         }"
     >
 
@@ -25,12 +26,19 @@
     <form name="form" @submit.prevent="">
         <input id="calc" type="text" name="answer" x-model="answer"
             @keyup="
-               if(evaluationDone && answer != '') {
+            if(evaluationDone && answer != '') {
                     newValue = answer.charAt(answer.length-1);
-                    answer = '';
-                    evaluationDone = false;
-                    answer += newValue;
-                    console.log(answer);
+
+                    for (i=0; i< operators.length; i++) {
+                        if (operators[i] == newValue) {
+                            evaluationDone = false;
+                        }
+                    }
+                    if (evaluationDone) {
+                        answer = '';
+                        evaluationDone = false;
+                        answer += newValue;
+                    }
                }
             "
             @keyup.enter="
