@@ -14,6 +14,7 @@
             evaluationDone: false,
             answer: '',
             history: [],
+            newValue: ''
         }"
     >
 
@@ -21,26 +22,24 @@
         <p x-text="showHistory"></p><br>
     </template>
 
-    <form name="form" @submit.prevent>
-        <input id="calc" type="text" name="answer" :value="answer"
+    <form name="form" @submit.prevent="">
+        <input id="calc" type="text" name="answer" x-model="answer"
+            @keyup="
+               if(evaluationDone && answer != '') {
+                    newValue = answer.charAt(answer.length-1);
+                    answer = '';
+                    evaluationDone = false;
+                    answer += newValue;
+                    console.log(answer);
+               }
+            "
             @keyup.enter="
                 inputValue = document.getElementById('calc').value;
-
-                if(inputValue.charAt(0) == '&radic;') {
-                     squareRoot = inputValue.substring(1);
-                     squareRoot = Math.sqrt(squareRoot);
-                     console.log(history.push(inputValue + '=' + squareRoot));
-                     answer = squareRoot;
-                }
-
-                else {
-                    answer = inputValue;
-                    answer = eval(answer);
-                    history.push(inputValue + '=' + eval(answer));
-                    evaluationDone = false;
-                }
+                answer = inputValue;
+                answer = eval(answer);
+                history.push(inputValue + '=' + eval(answer));
+                evaluationDone = true;
             "
-            @keyup="clickable = true"
           ><br>
         <template x-for="number in numbers">
             <input type="button" :value="number" x-text="number"
@@ -65,12 +64,9 @@
         <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
         <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
 
-        <input type="button" value="&radic;" @click="answer += '&radic;'; evaluationDone=false">
-
         <input type="button" value="=" @click="answer = document.getElementById('calc').value;
             history.push(answer + '=' + eval(answer));
-            answer = eval(answer);
-            answer = answer.toString();
+            answer = '' + eval(answer);
             evaluationDone = true;
             "
         >
