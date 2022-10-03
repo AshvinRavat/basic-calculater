@@ -15,7 +15,8 @@
             answer: '',
             history: [],
             newValue: '',
-            operators: ['+','-','*','/']
+            operators: ['+','-','*','/'],
+            x2: ''
         }"
     >
 
@@ -42,7 +43,14 @@
                 }
             "
             @keyup.enter="
-             if(answer.charAt(0) == '&radic;') {
+             if (answer.charAt(answer.length-1) == 'x')
+             {
+                x2 = answer.substring(0, answer.length-1);
+                history.push( x2 + '*' + x2 + '=' + x2 * x2);
+                x2 = x2 * x2;
+                answer = '' + x2;
+             }
+             else if(answer.charAt(0) == '&radic;') {
                 squareRoot = answer.substring(1);
                 squareRoot = Math.sqrt(squareRoot);
                 history.push(answer + '=' + squareRoot);
@@ -79,14 +87,24 @@
         <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
         <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
         <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
+        <input type="button" value="x2" @click="answer += 'x'; evaluationDone=false">
         <input type="button" value="&radic;" @click="answer += '&radic;'; evaluationDone=false">
 
 
         <input type="button" value="=" @click="
-            if(answer.charAt(0) == '&radic;') {
+            if (answer.charAt(answer.length-1) == 'x')
+            {
+                x2 = answer.substring(0, answer.length-1);
+                history.push( x2 + '*' + x2 + '=' + x2 * x2);
+                x2 = x2 * x2;
+                answer = '' + x2;
+            }
+
+            else if (answer.charAt(0) == '&radic;')
+            {
                 squareRoot = answer.substring(1);
                 squareRoot = Math.sqrt(squareRoot);
-                console.log(history.push(answer + '=' + squareRoot));
+                history.push(answer + '=' + squareRoot);
                 answer = squareRoot;
             }
             else {
@@ -95,7 +113,7 @@
                 answer = '' + eval(answer);
             }
             evaluationDone = true;
-            "
+           "
         >
     </form>
     </div>
