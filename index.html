@@ -64,8 +64,7 @@
                     else {
                         answer += operator
                     }
-                 ";
-                evaluationDone=false">
+                 evaluationDone=false;">
             </template>
 
             <input type="button" value="="
@@ -132,14 +131,15 @@
             function checkAndClearAnswer(evaluationDone, answer, number) {
                 if (evaluationDone && answer != '') {
                     answer = '';
+                    console.log(evaluationDone);
                 }
                 answer += number;
                 evaluationDone = false;
+               console.log(evaluationDone);
 
                 return {
                     'evaluationDone': evaluationDone,
                     'answer': answer,
-                    'number': number,
                 }
             }
 
