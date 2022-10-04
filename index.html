@@ -4,7 +4,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <h1>Calculator</h1>
     <div class="formstyle" x-data="
@@ -12,15 +11,13 @@
             numbers:
                 [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
             ],
+            answer: '',
             evaluationDone: false,
-            history: [],
-            newValue: '',
             clearInputBoxOnAnswer: '',
-            squareRoot: '',
             calculation: '',
-            operators: ['+','-','*','/'],
-            x2: '',
-            answer: ''
+            history: [],
+            clearHistories: '',
+            operators: ['.', '+', '-', '*', '/', 'x2', '&radic;']
         }">
 
         <template x-for="showHistory in history">
@@ -29,20 +26,21 @@
         <form name="form" @submit.prevent>
             <input id="calc" type="text" name="answer" x-model="answer"
                 @keyup="
-                    clearInputBoxOnAnswer = clearInputBoxOnKeyUp(answer, evaluationDone, operators, newValue);
+                    clearInputBoxOnAnswer = clearInputBoxOnKeyUp(answer, evaluationDone);
                     answer = clearInputBoxOnAnswer.answer;
                     evaluationDone = clearInputBoxOnAnswer.evaluationDone;
                 "
                 @keyup.enter="
-                    calculation = calculationOperations(answer, squareRoot,history, evaluationDone, x2);
+                    calculation = calculationOperations(answer, history, evaluationDone);
                     history = calculation.history;
                     answer = calculation.answer;
                     evaluationDone = calculation.evaluationDone;
-                    "
+                "
                 >
             <template x-for="number in numbers">
                 <input type="button" :value="number" x-text="number"
-                    @click="calculation = checkAndClearAnswer(evaluationDone, answer, number);
+                    @click="
+                        calculation = checkAndClearAnswer(evaluationDone, answer, number);
                         evaluationDone = calculation.evaluationDone;
                         answer = calculation.answer;
                     "
@@ -51,32 +49,39 @@
 
             <input type="button" id="clear" value="Clear All"
                 @click="
-                    if(answer != '') {
-                        history = [];
-                    }
-                    answer = ''; "
+                    clearHistories = clearHistory();
+                    history = clearHistories.history;
+                    answer = clearHistories.answer;
+                "
             >
-            <input type="button" value="." @click="answer +='.';  evaluationDone=false">
-            <input type="button" value="+" @click="answer += '+'; evaluationDone=false">
-            <input type="button" value="-" @click="answer += '-'; evaluationDone=false">
-            <input type="button" value="*" @click="answer += '*'; evaluationDone=false">
-            <input type="button" value="/" @click="answer += '/'; evaluationDone=false">
-            <input type="button" value="x2" @click="answer += 'x'; evaluationDone=false">
-            <input type="button" value="&radic;" @click="answer += '&radic;'; evaluationDone=false">
 
+            <template x-for="operator in operators">
+                 <input type="button" :value="operator"
+                 @click="
+                    if (operator == 'x2') {
+                        answer += 'x'
+                    }
+                    else {
+                        answer += operator
+                    }
+                 ";
+                evaluationDone=false">
+            </template>
 
             <input type="button" value="="
                 @click="
-                    calculation = calculationOperations(answer, squareRoot,history, evaluationDone, x2);
-                    history = calculation.history;
-                    answer = calculation.answer;
-                    evaluationDone = calculation.evaluationDone;
+                   calculation = calculationOperations(answer, history, evaluationDone);
+                   history = calculation.history;
+                   answer = calculation.answer;
+                   evaluationDone = calculation.evaluationDone;
                 "
             >
         </form>
 
         <script>
-            function clearInputBoxOnKeyUp(answer, evaluationDone, operators, newValue) {
+            function clearInputBoxOnKeyUp(answer, evaluationDone) {
+                var operators = ['+','-','*','/'];
+
                 if (evaluationDone && answer != '') {
                     newValue = answer.charAt(answer.length - 1);
                     for (i = 0; i < operators.length; i++) {
@@ -96,36 +101,33 @@
                 }
             }
 
-            function calculationOperations(answer, squareRoot, history, evaluationDone, x2) {
-                if (answer.charAt(answer.length - 1) == 'x') {
-                    x2 = answer.substring(0, answer.length - 1);
-                    history.push(x2 + '*' + x2 + '=' + x2 * x2);
-                    x2 = x2 * x2;
-                    answer = '' + x2;
-                    evaluationDone = true;
-                }
-                else if (answer.charAt(0) == '&radic;') {
+            function calculationOperations(answer, history, evaluationDone) {
+                if (answer.charAt(0).charCodeAt(0) === 8730) {
                     squareRoot = answer.substring(1);
                     squareRoot = Math.sqrt(squareRoot);
                     history.push(answer + '=' + squareRoot);
                     answer = squareRoot;
+                }
+                else if (answer.charAt(answer.length - 1) == 'x') {
+                    square = answer.substring(0, answer.length - 1);
+                    history.push(square + '*' + square + '=' + square * square);
+                    square = square * square;
+                    answer = '' + square;
                 }
                 else {
                     inputValue = document.getElementById('calc').value;
                     answer = inputValue;
                     answer = eval(answer);
                     history.push(inputValue + '=' + eval(answer));
-                    evaluationDone = true;
                 }
+                evaluationDone = true;
 
                 return {
-                    'squareRoot': squareRoot,
                     'answer': answer,
                     'history': history,
                     'evaluationDone': evaluationDone,
                 }
             }
-
 
             function checkAndClearAnswer(evaluationDone, answer, number) {
                 if (evaluationDone && answer != '') {
@@ -140,6 +142,18 @@
                     'number': number,
                 }
             }
+
+            function clearHistory(answer, history) {
+                 if(answer != '') {
+                    history = [];
+                 }
+
+                 return {
+                    'answer': answer = '',
+                    'history': history,
+                 }
+            }
         </script>
+    </div>
 </body>
 </html>
